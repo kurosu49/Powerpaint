@@ -1,0 +1,80 @@
+/*
+ * TCS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+
+/**
+ * Line Tool for PowerPaint.
+ * @author Crystal Miraflor
+ * @version 1.00
+ */
+public class LineTool extends AbstractTool {
+
+  /**
+   * The name of this line tool.
+   */
+  private static final String NAME = "Line";
+  
+  /**
+   * The mnemonic key of this line tool.
+   */
+  private static final int KEY = KeyEvent.VK_L;
+  
+  /**
+   * Constructs new Line tool.
+   */
+  public LineTool() {
+    super(NAME, KEY);
+  }
+  
+
+  
+  /**
+   * Creates a new path from this initial point when
+   * the mouse is pressed. 
+   * 
+   * @param the_event The event.
+   */
+  public void mousePressed(final MouseEvent the_event) {
+    my_path = new GeneralPath();
+    my_path.moveTo(the_event.getX(), the_event.getY());
+    my_path.lineTo(the_event.getX(), the_event.getY());
+    
+  }
+  
+  /**
+   * Creates path caused by the drag of a mouse.
+   * 
+   * @param the_event The event.
+   */
+  public void mouseDragged(final MouseEvent the_event) {
+    final Point2D temp_path = my_path.getCurrentPoint();
+    my_path.reset();
+    my_path.moveTo(temp_path.getX(), temp_path.getY());
+    my_path.lineTo(the_event.getX(), the_event.getY());
+    my_panel.repaint();
+    my_path.moveTo(temp_path.getX(), temp_path.getY());
+    
+    
+  }
+  
+  /**
+   * Completes the creation of the line when
+   * the mouse is released.
+   * 
+   * @param the_event The event.
+   */
+  public void mouseReleased(final MouseEvent the_event) {
+    my_path.lineTo(the_event.getX(), the_event.getY());
+    my_panel.repaint();
+  }
+  
+  
+}

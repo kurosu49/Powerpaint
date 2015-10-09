@@ -1,0 +1,326 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+
+/**
+ * A Drawing Panel, the main drawing area
+ * of Power Paint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.3
+ *
+ */
+@SuppressWarnings("serial")
+public class DrawingPanel extends JPanel {
+
+  /**
+   * Preferred width of the drawing panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the drawing panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * The grid spacing.
+   */
+  private static final int GRID_SPACING = 10;
+  
+  /**
+   * The Ellipse index number.
+   */
+  private static final int ELLIPSE = 3;
+  
+  /**
+   * Preferred size.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * The drawings on the drawing panel.
+   */
+  private final List<AbstractTool> my_drawings;
+
+  /**
+   * The collection of thickness/stroke widths used.
+   */
+  private final List<Integer> my_strokes;
+  
+  /**
+   * A boolean saying whether or not the grid is
+   * on or off.
+   */
+  private boolean my_grid_status;
+  
+  /**
+   * The color on the panel.
+   */
+  private Color my_color;
+  
+  /**
+   * Default thickness/stroke width.
+   */
+  private int my_thickness;
+  
+  /**
+   * The index of the tool in use.
+   */
+  private int my_tool_index;
+  
+  /**
+   * The current tool that is drawing.
+   */
+  private Object my_curr_tool;
+  
+  
+  /**
+   * Constructs a new Drawing panel.
+   */
+  public DrawingPanel() {
+    super();
+    this.setPreferredSize(SIZE);
+    this.setBackground(Color.WHITE);
+    my_drawings = new ArrayList<AbstractTool>();
+    my_strokes = new ArrayList<Integer>();
+    my_color = Color.BLACK;
+    my_thickness = 1;
+    my_curr_tool = null;
+    my_tool_index = 1;
+    addMouseHandler();
+  }
+  
+  /**
+   * Private helper method to add mouse handler in
+   * the constructor.
+   */
+  private void addMouseHandler() {
+    final MouseHandler mousehandler = new MouseHandler();
+    addMouseListener(mousehandler);
+    addMouseMotionListener(mousehandler);
+  }
+
+  /**
+   * Sets the tool index to the current tool.
+   * 
+   * @param the_index The index.
+   */
+  public void setTool(final int the_index) {
+    my_tool_index = the_index;
+  }
+  
+  /**
+   * Sets the thickness of the tool.
+   * @param the_thickness The thickness.
+   */
+  public void setThickness(final int the_thickness) {
+    my_thickness = the_thickness;
+  }
+  
+  /**
+   * Obtains the color this panel is using.
+   * 
+   * @return the current color.
+   */
+  public Color getColor() {
+    return my_color;
+  }
+  
+  /**
+   * Obtains the thickness/stroke width this panel
+   * is using.
+   * 
+   * @return the current thickness.
+   */
+  public int getThickness() {
+    return my_thickness;
+  }
+  
+  /**
+   * Sets the color.
+   * 
+   * @param the_color The color.
+   */
+  public void setColor(final Color the_color) {
+    my_color = the_color;
+  }
+  
+  /**
+   * Clears the drawing panel of all
+   * drawings.
+   */
+  public void clearDrawing() {
+    my_drawings.clear();
+    repaint();
+  }
+  
+  /**
+   * Sets grid to be on or off depending on 
+   * the value.
+   * 
+   * @param the_value The value.
+   */
+  public void setGrid(final boolean the_value) {
+    my_grid_status = the_value;
+  }
+  
+  /**
+   * Checks if the grid is on or not.
+   * 
+   * @return whether the grid is selected or not.
+   */
+  public boolean isGridOn() {
+    return my_grid_status;
+  }
+  
+  /**
+   * Creates a grid on the drawing panel.
+   * 
+   * @param the_graphic The graphic.
+   */
+  public void makeGrid(final Graphics2D the_graphic) {
+    the_graphic.setStroke(new BasicStroke(1));
+    the_graphic.setColor(Color.GRAY);
+    Point start_point;
+    Point end_point;
+    for (int i = 1; i < (getHeight() / GRID_SPACING); i++) {
+      start_point = new Point(0, i * GRID_SPACING);
+      end_point = new Point(getWidth(), i * GRID_SPACING);
+      the_graphic.drawLine(start_point.x, start_point.y, end_point.x, end_point.y);
+    }
+    for (int j = 1; j < (getWidth() / GRID_SPACING); j++) {
+      start_point = new Point(j * GRID_SPACING, 0);
+      end_point = new Point(j * GRID_SPACING, getHeight());
+      the_graphic.drawLine(start_point.x, start_point.y, end_point.x, end_point.y);
+    }
+      
+    
+  }
+  
+  
+  /**
+   * Paints the panel.
+   * 
+   * @param the_graphics The graphics.
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+    graphic.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                             RenderingHints.VALUE_ANTIALIAS_ON);
+    if (isGridOn()) {
+      makeGrid(graphic);
+    }
+
+    for (int i = 0; i < my_drawings.size(); i++) {
+      graphic.setStroke(new BasicStroke(my_strokes.get(i)));
+      my_drawings.get(i).draw(graphic);
+    }
+    if (my_curr_tool != null) {
+      graphic.setStroke(new BasicStroke(my_thickness));
+      ((AbstractTool) my_curr_tool).draw(graphic);
+    }
+      
+  }
+  
+  /**
+   * 
+   * The mouse listener for the drawing panel.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.2
+   */
+  private class MouseHandler extends MouseAdapter implements MouseMotionListener {
+    
+    /**
+     * Listens for mouse presses and starts the drawing
+     * there.
+     * 
+     * @param the_event The event.
+     */
+    public void mousePressed(final MouseEvent the_event) {
+      switch (my_tool_index) {
+        case 1:
+          my_curr_tool = new LineTool(the_event.getX(), the_event.getY(),
+                                      the_event.getX(), the_event.getY(), my_color);
+
+          break;
+        case 2:
+          my_curr_tool = new RectangleTool(the_event.getX(), the_event.getY(), 0, 0, my_color);
+
+          break;
+          
+        case ELLIPSE:
+          my_curr_tool = new EllipseTool(the_event.getX(), the_event.getY(),
+                                  the_event.getX(), the_event.getY(), my_color);
+
+          break;
+          
+//        default:
+//		  my_curr_tool = new LineTool(the_event.getX(), the_event.getY(),
+//		                              the_event.getX(), the_event.getY(), my_color);
+//		
+      }
+    }
+	  
+	  /**
+	   * Listens for if the mouse is dragged and continues the drawing.
+	   * 
+	   * @param the_event The event.
+	   */
+    public void mouseDragged(final MouseEvent the_event) {
+      if (my_curr_tool != null) {
+        ((AbstractTool) my_curr_tool).draggedDrawing(true);
+//        ((AbstractTool) my_curr_tool).setEndX(the_event.getX());
+//        ((AbstractTool) my_curr_tool).setEndY(the_event.getY());
+        ((AbstractTool) my_curr_tool).setEndPoints(the_event.getX(), the_event.getY());
+      
+    	repaint();
+      }
+    }
+	  
+	  /**
+	   * Listens if the mouse is released and ends the drawing there.
+	   * 
+	   * @param the_event The event.
+	   */
+    public void mouseReleased(final MouseEvent the_event) {
+      if (my_curr_tool != null) {
+//    	((AbstractTool) my_curr_tool).setEndX(the_event.getX());
+//    	((AbstractTool) my_curr_tool).setEndY(the_event.getY());
+        ((AbstractTool) my_curr_tool).setEndPoints(the_event.getX(), the_event.getY());
+        my_drawings.add((AbstractTool) my_curr_tool);
+        my_strokes.add(getThickness());
+        ((AbstractTool) my_curr_tool).draggedDrawing(false);
+        my_curr_tool = null;
+        repaint();
+      }
+    }
+  
+	  
+  }
+
+  
+  
+}

@@ -1,0 +1,34 @@
+import javax.swing.JFrame;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+/**
+ * The GUI for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class PowerPaintGUI {
+  
+  private static final String TITLE = "TCSS 305 PowerPaint, Spring 2013";
+
+  private final JFrame my_frame;
+  
+  public PowerPaintGUI() {
+    my_frame = new JFrame();
+  }
+  
+  public void setup() {
+    
+  }
+  
+  public void start() {
+    
+  }
+  
+}

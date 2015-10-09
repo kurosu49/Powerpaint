@@ -1,0 +1,28 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+/**
+ * The Ellipse tool for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class Ellipse extends AbstractTool {
+  
+  /**
+   * Creates a new Ellipse tool.
+   */
+  public Ellipse() {
+    super("Ellipse", KeyEvent.VK_E);
+  }
+
+ 
+
+}

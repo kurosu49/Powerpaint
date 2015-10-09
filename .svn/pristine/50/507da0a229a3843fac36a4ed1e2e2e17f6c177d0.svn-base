@@ -1,0 +1,121 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.GeneralPath;
+import java.util.Stack;
+
+import javax.swing.JPanel;
+
+/**
+ * The main drawing area of PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.1 
+ *
+ */
+@SuppressWarnings("serial")
+public class PowerPaintPanel extends JPanel{
+
+  /**
+   * Preferred width of the panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * Preferred size of the panel.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * Stores a collection of colors that shapes were drawn with.
+   */
+  private Stack<Color> my_used_colors = new Stack<Color>();
+  
+  /**
+   * Stores a collection of stroke widths that shapes were
+   * drawn width.
+   */
+  private Stack<Integer> my_used_strokes = new Stack<Integer>();
+  
+  /**
+   * Stores all past shapes drawn on the panel.
+   */
+  private Stack<GeneralPath> my_drawings = new Stack<GeneralPath>();
+  
+  /**
+   * The set color on the panel;
+   */
+  private Color my_color;
+  
+  /**
+   * The set stroke width on the panel;
+   */
+  private int my_thickness;
+  
+  /**
+   * The drawing path.
+   */
+  private GeneralPath my_drawing;
+  
+  public PowerPaintPanel() {
+    super();
+    setPreferredSize(SIZE);
+    setBackground(Color.WHITE);
+    my_color = Color.BLACK;
+    my_thickness = 1;
+  }
+  
+  /**
+   * Paints the graphic onto the panel.
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+
+  }
+  
+  /**
+   * Sets the passed in color as
+   * the new color on the panel.
+   * 
+   * @param the_color The color.
+   */
+  public void setColor(final Color the_color) {
+    my_color = the_color;
+  }
+  
+  /**
+   * Sets the passed in thickness as
+   * the new thickness on the panel.
+   * 
+   * @param the_thickness The thickness.
+   */
+  public void setThickness(final int the_thickness) {
+    my_thickness = the_thickness;
+  }
+  
+  /**
+   * The Line tool for PowerPaint.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.1
+   */
+  //InnerClass
+  class LineTool extends MouseAdapter {
+    
+    public void mouseClicked(MouseEvent the_event) {
+      
+    }
+  }
+  
+}

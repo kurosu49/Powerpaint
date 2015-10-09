@@ -1,0 +1,163 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+
+
+/**
+ * The GUI for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class PowerPaintGUI {
+  
+
+  /**
+   * Main frame of the GUI.
+   */
+  private final JFrame my_frame;
+  
+  /**
+   * Main panel of the GUI.
+   */
+  private final PowerPaintPanel my_panel;
+  
+  /**
+   * The list of tool button actions.
+   */
+  private List<ToolButtonActions> my_actions;
+  
+  
+  /**
+   * Constructs new PowerPaintGUI object.
+   * Initializes all instance fields.
+   */
+  public PowerPaintGUI() {
+    my_frame = new JFrame("TCSS 305 PowerPaint, Spring 2013");
+    my_panel = new PowerPaintPanel();
+    my_actions = new ArrayList<ToolButtonActions>();
+    //my_master_panel = new JPanel(new BorderLayout());
+  }
+  
+  /**
+   * 
+   */
+  public void createActions() {
+    my_actions.add(new ToolButtonActions("Pencil", KeyEvent.VK_P, 0));
+    my_actions.add(new ToolButtonActions("Line", KeyEvent.VK_L, 1));
+    my_actions.add(new ToolButtonActions("Rectangle", KeyEvent.VK_R, 2));
+    my_actions.add(new ToolButtonActions("Ellipse", KeyEvent.VK_E, 3));
+  }
+  
+
+  /**
+   * Creates and sets up the buttons and components
+   * by adding them onto the frame. 
+   */
+  private void initialSetup() {
+
+    my_frame.add(my_panel);
+    final MenuBar menubar = new MenuBar();
+    final ToolBar toolbar = new ToolBar();
+    menubar.createFileButtons();
+    createActions();
+    for (ToolButtonActions a: my_actions) {
+      menubar.createToolButtons(a.getName());
+      toolbar.createToolToggleButton(a.getName());
+    }
+    
+    menubar.createThicknessButtons("1", KeyEvent.VK_1, 1);
+    menubar.createThicknessButtons("2", KeyEvent.VK_2, 1);
+    menubar.createThicknessButtons("4", KeyEvent.VK_4, 1);
+    menubar.setupOptionButtons();
+    menubar.createHelpButton();
+    
+    my_frame.setJMenuBar(menubar);
+    my_frame.add(toolbar, BorderLayout.SOUTH);
+    
+  }
+   
+  /**
+   * 
+   * @author Crystal
+   *
+   */
+  //inner class
+  @SuppressWarnings("serial")
+  private class ToolButtonActions extends AbstractAction {
+    
+    /**
+     * 
+     */
+    private int my_tool_index;
+    
+    /**
+     * 
+     */
+    private String my_name;
+    
+    /**
+     * 
+     * @param the_name The name.
+     * @param the_mnemonic The mnemonic.
+     * @param the_index The index.
+     */
+    public ToolButtonActions(final String the_name, final int the_mnemonic, final int the_index) {
+      super(the_name);
+      my_name = the_name;
+      putValue(Action.MNEMONIC_KEY, the_mnemonic);
+      putValue(Action.SELECTED_KEY, false);
+      my_tool_index = the_index;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public String getName() {
+      return my_name;
+    }
+
+    /**
+     * 
+     */
+    @Override
+    public void actionPerformed(final ActionEvent the_e) {
+      my_panel.setTool(my_tool_index);
+      my_panel.repaint();
+      
+    }
+    
+  }
+  
+  /**
+   * Basically creates the entire GUI.
+   */
+  public void start() {
+    
+    initialSetup();
+    
+    my_frame.pack();
+    my_frame.setVisible(true);
+    my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+  }
+  
+}

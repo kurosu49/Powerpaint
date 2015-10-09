@@ -1,0 +1,63 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.Color;
+
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+
+/**
+ * The tool bar for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class PToolBar extends JToolBar {
+
+  /**
+   * Button group for this tool bar.
+   */
+  private final ButtonGroup my_buttons;
+  
+  /**
+   * Constructs a new tool bar for
+   * PowerPaint.
+   */
+  public PToolBar() {
+    super();
+    my_buttons = new ButtonGroup();
+  }
+  
+  /**
+   * Creates toggle buttons of the tools for
+   * PowerPaint and adds them to the tool bar.
+   * 
+   * @param the_name The name.
+   * @param the_mnemonic The mnemonic.
+   */
+  public void createToolToggleButton(final Action the_action/*final String the_name /*, final int the_mnemonic*/) {
+    final JToggleButton button = new JToggleButton(the_action);
+    //button.setMnemonic(the_mnemonic);
+    button.setSelected(false);
+    my_buttons.add(button);
+    add(button);
+  }
+  
+  public void createColorToolBarButton(final Action the_action) {
+    final JButton button = new JButton(the_action);
+    button.setSelected(false);
+    button.setForeground(Color.WHITE);
+    button.setBackground(Color.BLACK);
+    my_buttons.add(button);
+    add(button);
+  }
+
+}

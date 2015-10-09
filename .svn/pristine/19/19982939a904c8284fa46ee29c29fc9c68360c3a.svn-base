@@ -1,0 +1,104 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ *
+ */
+
+import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.geom.GeneralPath;
+
+
+/**
+ * The Abstract class for all PowerPaint tools.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public abstract class AbstractTool extends MouseAdapter {
+
+  /**
+   * The description of the tool.
+   */
+  private final String my_description;
+  
+  /**
+   * The mnemonic of the tool.
+   */
+  private final int my_mnemonic;
+  
+  /**
+   * The drawing path the tool is on.
+   */
+  protected GeneralPath my_path = new GeneralPath();
+  
+  /**
+   * The color.
+   */
+  private Color my_color = Color.BLACK;
+  
+  /**
+   * The thickness of the path being drawn.
+   */
+  private int my_thickness = 1;
+  
+  /**
+   * The drawing panel.
+   */
+  protected DrawingPanel my_panel;
+  
+  
+  /**
+   * Creates new Abstract Tool and initializes fields.
+   * 
+   * @param the_description The description.
+   * @param the_mnemonic The Mnemonic.
+   */
+  public AbstractTool(final String the_description, final int the_mnemonic) {
+    super();
+    my_description = the_description;
+    my_mnemonic = the_mnemonic;
+ 
+  }
+  
+  /**
+   * Obtains description of the tool.
+   * 
+   * @return the string of the tool's decription.
+   */
+  public String getDescription() {
+    return my_description;
+  }
+  
+  /**
+   * Obtains the Mnemonic of the tool.
+   * 
+   * @return the mnemonic of the tool.
+   */
+  public int getMnemonic() {
+    return my_mnemonic;
+  }
+  
+  /**
+   * Sets the current color of the tool.
+   * 
+   * @param the_color The Color.
+   */
+  public void setColor(final Color the_color) {
+    my_color = the_color;
+  }
+  
+  /**
+   * Sets the thickness of the tool.
+   * @param the_thickness
+   */
+  public void setThickness(final int the_thickness) {
+    my_thickness = the_thickness;
+  }
+  
+  public void setPanel(DrawingPanel the_panel) {
+    my_panel = the_panel;
+  }
+  
+}

@@ -1,0 +1,241 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
+
+import javax.swing.JPanel;
+
+/**
+ * The main drawing area of PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.1 
+ *
+ */
+@SuppressWarnings("serial")
+public class PowerPaintPanel extends JPanel {
+
+  /**
+   * Preferred width of the panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * Preferred size of the panel.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * Stores a collection of colors that shapes were drawn with.
+   */
+  private List<Color> my_used_colors = new ArrayList<Color>();
+  
+  /**
+   * Stores a collection of stroke widths that shapes were
+   * drawn width.
+   */
+  private List<Integer> my_used_strokes = new ArrayList<Integer>();
+  
+  /**
+   * Stores all past shapes drawn on the panel.
+   */
+  private Stack<GeneralPath> my_drawings = new Stack<GeneralPath>();
+  
+  /**
+   * The set color on the panel;
+   */
+  private Color my_color;
+  
+  /**
+   * The set stroke width on the panel;
+   */
+  private int my_thickness;
+  
+  /**
+   * The drawing path.
+   */
+  private GeneralPath my_drawing;
+  
+  /**
+   * All tools.
+   */
+  private MouseAdapter[] my_tools = {new PencilTool(), new LineTool(),
+                                     new RectangleTool(), new EllipseTool()};
+  
+  /**
+   * Current tool in use.
+   */
+  private MouseAdapter my_tool;
+  
+  /**
+   * Last tool used.
+   */
+  private MouseAdapter my_last_tool;
+  
+  /**
+   * Creates a new PowerPaintPanel to draw on.
+   */
+  public PowerPaintPanel() {
+    super();
+    setPreferredSize(SIZE);
+    setBackground(Color.WHITE);
+    my_color = Color.BLACK;
+    my_thickness = 1;
+  }
+  
+  /**
+   * Paints the graphic onto the panel.
+   * 
+   * @param the_graphics The graphics.
+   * 
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+    my_used_colors.add(my_color);
+    my_used_strokes.add(my_thickness);
+    final Iterator<Color> color = my_used_colors.iterator();
+    final Iterator<Integer> stroke = my_used_strokes.iterator();
+    for (GeneralPath g : my_drawings) {
+      if (color.hasNext() && stroke.hasNext()) {
+        graphic.setColor(color.next());
+        graphic.setStroke(new BasicStroke(stroke.next()));
+      }
+      graphic.draw(g);
+    }
+
+    //for (GeneralPath d : my_drawings) {
+    //graphic.setColor(my_used_colors.get(my_index));
+    //graphic.setStroke(new BasicStroke(my_used_strokes.get(my_index)));
+    //graphic.draw(my_drawings.get((my_drawings.size())));
+
+    //}
+
+  }
+  
+  /**
+   * Sets the passed in color as
+   * the new color on the panel.
+   * 
+   * @param the_color The color.
+   */
+  public void setColor(final Color the_color) {
+    my_color = the_color;
+  }
+  
+  /**
+   * Sets the passed in thickness as
+   * the new thickness on the panel.
+   * 
+   * @param the_thickness The thickness.
+   */
+  public void setThickness(final int the_thickness) {
+    my_thickness = the_thickness;
+  }
+  
+  /**
+   * Sets the tool.
+   * 
+   * @param the_index The index.
+   */
+  public void setTool(final int the_index) {
+    this.removeMouseListener(my_last_tool);
+    this.removeMouseMotionListener(my_last_tool);
+    my_tool = my_tools[the_index];
+    this.addMouseListener(my_tool);
+    this.addMouseMotionListener(my_tool);
+    my_last_tool = my_tool;
+  }
+  
+  /**
+   * The Line tool for PowerPaint.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.1
+   */
+  //InnerClass
+  class LineTool extends MouseAdapter {
+    
+    /**
+     * Creates the line at the initial starting point
+     * caused by the mouse click.
+     */
+    public void mouseClicked(final MouseEvent the_event) {
+      my_drawing = new GeneralPath();
+      my_drawing.moveTo(the_event.getX(), the_event.getY());
+      my_drawing.lineTo(the_event.getX(), the_event.getY());
+      my_drawings.push(my_drawing); //updates the collection of drawings
+    }
+    
+    /**
+     * Where the lines moves as the mouse is dragged.
+     */
+    public void mouseDragged(final MouseEvent the_event) {
+      final Point2D temp_path = my_drawing.getCurrentPoint();
+      my_drawing.moveTo(temp_path.getX(), temp_path.getY());
+      my_drawing.lineTo(the_event.getX(), the_event.getY());
+      repaint();
+      my_drawing.moveTo(temp_path.getX(), temp_path.getY());
+    }
+    
+    /**
+     * Ends the drawn line when the mouse is released.
+     */
+    public void mouseReleased(final MouseEvent the_event) {
+      my_drawings.peek().lineTo(the_event.getX(), the_event.getY());
+    } 
+    
+  }
+  
+  /**
+   * The Pencil tool for PowerPaint.
+   *   
+   * @author Crystal Miraflor
+   * @version 1.1
+   */
+  //InnerClass  
+  class PencilTool extends MouseAdapter {
+      
+  }
+  
+  /**
+   * The Rectangle tool for PowerPaint.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.1
+   *
+   */
+  //InnerClass
+  class RectangleTool extends MouseAdapter {
+    
+  }
+  
+  /**
+   * The Ellipse tool for PowerPaint.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.1
+   * 
+   *
+   */
+  //InnerClass
+  class EllipseTool extends MouseAdapter {
+    
+  }
+  
+}

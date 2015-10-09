@@ -1,0 +1,114 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.GeneralPath;
+import java.util.Stack;
+
+import javax.swing.JPanel;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+/**
+ * A Drawing Panel object.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class DrawingPanel extends JPanel {
+
+  /**
+   * Preferred width of the drawing panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the drawing panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * Preferred size.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * The drawings/paths on the drawing panel.
+   */
+  private Stack<GeneralPath> my_drawings = new Stack<GeneralPath>();
+  
+  /**
+   * Array of tools.
+   */
+  private final MouseAdapter[] my_tools = {new Pencil(), new LineTool(), 
+                                           new Rectangle(), new Ellipse()};
+  
+  /**
+   * The color on the panel.
+   */
+  private final Color my_color;
+  
+  /**
+   * The tool currently in use.
+   */
+  private MouseAdapter my_tool;
+  
+  /**
+   * 
+   */
+  private MouseAdapter my_last_tool;
+  
+  /**
+   * Constructs a new Drawing panel.
+   */
+  public DrawingPanel() {
+    super();
+    this.setPreferredSize(SIZE);
+    this.setBackground(Color.WHITE);
+    my_color = Color.BLACK;
+  }
+
+  /**
+   * Sets the tool index to the current tool.
+   * 
+   * @param the_index The index.
+   */
+  public void setTool(final int the_index) {
+    removeMouseListener(my_last_tool);
+    removeMouseMotionListener(my_last_tool);
+    my_tool = my_tools[the_index];
+    addMouseListener(my_tool);
+    addMouseMotionListener(my_tool);
+    my_last_tool = my_tool; 
+  }
+  
+  /**
+   * 
+   * @param the_graphics The graphics.
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+    graphic.setColor(my_color);
+    graphic.setStroke(new BasicStroke(1));
+    for (GeneralPath d : my_drawings) {
+      ((AbstractTool) my_tool).setPanel(this);
+      graphic.draw(d);
+      
+    }
+  }
+
+  
+  
+}

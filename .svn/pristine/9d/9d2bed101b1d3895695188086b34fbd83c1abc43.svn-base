@@ -1,0 +1,60 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.JPanel;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+/**
+ * A Drawing Panel object.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class DrawingPanel extends JPanel {
+
+  /**
+   * Preferred width of the drawing panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the drawing panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * Preferred size.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * Constructs a new Drawing panel.
+   */
+  public DrawingPanel() {
+    super();
+    this.setPreferredSize(SIZE);
+    this.setBackground(Color.WHITE);
+  }
+
+  /**
+   * 
+   * @param the_graphics The graphics.
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+    // add your code here to draw cool stuff
+  }
+  
+  
+}

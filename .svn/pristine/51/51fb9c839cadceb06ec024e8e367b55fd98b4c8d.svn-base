@@ -1,0 +1,215 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+
+
+/**
+ * The GUI for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class PowerPaintGUI2 {
+  
+  private static final String[] my_tool_names = new String[] {"Pencil", "Line", "Rectangle", "Ellipse"};
+
+  /**
+   * Main frame of the GUI.
+   */
+  private final JFrame my_frame;
+  
+  /**
+   * Main panel of the GUI.
+   */
+  private final DrawingPanel my_panel;
+  
+  /**
+   * Contains the actions of all tool buttons.
+   */
+  private List<ToolButtonAction> my_tool_action;
+  
+  /**
+   * The menu bar.
+   */
+  private final PMenuBar menubar;
+  
+  /**
+   * The tool bar.
+   */
+  private final PToolBar toolbar;
+  
+  /**
+   * Constructs new PowerPaintGUI object.
+   * Initializes all instance fields.
+   */
+  public PowerPaintGUI2() {
+    my_frame = new JFrame("TCSS 305 PowerPaint, Spring 2013");
+    my_panel = new DrawingPanel();
+    menubar = new PMenuBar();
+    toolbar = new PToolBar();
+  }
+  
+  /**
+   * 
+   */
+  public void createToolActions() {
+    my_tool_action = new ArrayList<ToolButtonAction>();
+    my_tool_action.add(new ToolButtonAction("Pencil", KeyEvent.VK_P, 0));
+    my_tool_action.add(new ToolButtonAction("Line", KeyEvent.VK_L, 1));
+    my_tool_action.add(new ToolButtonAction("Rectangle", KeyEvent.VK_R, 2));
+    my_tool_action.add(new ToolButtonAction("Ellipse", KeyEvent.VK_E, 3));
+  }
+
+  /**
+   * Creates and sets up the buttons and components
+   * by adding them onto the frame. 
+   */
+  private void initialSetup() {
+
+    my_frame.add(my_panel);
+//    final PMenuBar menubar = new PMenuBar();
+//    final PToolBar toolbar = new PToolBar();
+    final ColorButtonAction coloraction = new ColorButtonAction("Color...");
+    menubar.createFileButtons();
+//    menubar.createColorButton();
+  
+    createToolActions();
+    menubar.createColorButton(coloraction);
+    toolbar.createColorToolBarButton(coloraction);
+    for (ToolButtonAction t : my_tool_action) {
+      menubar.createToolButtons(t);
+      toolbar.createToolToggleButton(t);
+    }
+    
+    menubar.createThicknessButtons("1", KeyEvent.VK_1, my_panel, 1);
+    menubar.createThicknessButtons("2", KeyEvent.VK_2, my_panel, 2);
+    menubar.createThicknessButtons("4", KeyEvent.VK_4, my_panel, 4);
+    menubar.setupOptionButtons();
+    menubar.createHelpButton();
+    
+    my_frame.setJMenuBar(menubar);
+    my_frame.add(toolbar, BorderLayout.SOUTH);
+    
+  }
+  
+  /**
+   * Basically creates the entire GUI.
+   */
+  public void start() {
+    
+    initialSetup();
+    
+    my_frame.pack();
+    my_frame.setVisible(true);
+    my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+  }
+  
+  /**
+   * 
+   * @author Crystal
+   *
+   */
+  @SuppressWarnings("serial")
+  class ToolButtonAction extends AbstractAction {
+
+	/**
+	 * The tool index.
+	 */
+    private int my_tool;
+    
+    private String my_name;
+	  
+      /**
+       * 
+       * @param the_name
+       * @param the_mnemonic
+       * @param the_index
+       */
+    public ToolButtonAction(final String the_name, final int the_mnemonic, 
+	                          final int the_index) {
+      super(the_name);
+      my_name = the_name;
+      my_tool = the_index;
+      this.putValue(Action.NAME, the_name);
+      this.putValue(Action.MNEMONIC_KEY, the_mnemonic);
+      this.putValue(Action.SELECTED_KEY, true);
+    }
+    
+    public String getName(){
+      return my_name;
+    }
+    
+	/**
+	 * Implements the action of the button.
+	 * 
+	 * @param the_action The action.
+	 */
+    @Override
+    public void actionPerformed(ActionEvent the_action) {
+    	my_panel.setTool(my_tool);
+      
+    }
+	  
+  }
+  
+  /**
+   * 
+   * @author Crystal
+   *
+   */
+  @SuppressWarnings("serial")
+  class ColorButtonAction extends AbstractAction {
+
+    /**
+     * 
+     */
+    private Color my_color;
+    
+    /**
+     * 
+     * @param the_name
+     */
+    public ColorButtonAction(final String the_name) {
+      super(the_name);
+      my_color = my_panel.getColor();
+      this.putValue(Action.NAME, the_name);
+      this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_C);
+      this.putValue(Action.SELECTED_KEY, true);
+    }
+    
+    /**
+     * 
+     */
+    @Override
+    public void actionPerformed(ActionEvent the_action) {
+      final Color result = JColorChooser.showDialog(my_panel, "Choose a Color.", my_panel.getColor());
+//      menubar.changeColorButton(result);
+      my_panel.setColor(result);
+      
+      
+    }
+  }
+  
+
+  
+}

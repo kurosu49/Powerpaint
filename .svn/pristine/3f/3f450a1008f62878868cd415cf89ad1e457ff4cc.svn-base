@@ -1,0 +1,142 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.event.KeyEvent;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+//import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
+
+
+/**
+ * Menu Bar class.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class MenuBar extends JMenuBar {
+  
+  /**
+   * The main menus for PowerPaint.
+   */
+  private final JMenu[] my_main_menus = new JMenu[] {new JMenu("File") , new JMenu("Options"), 
+                                                     new JMenu("Tools")};
+  
+  /**
+   * The help menu.
+   */
+  private final JMenu my_help_menu;
+  
+  /**
+   * A Button group to hold all tool buttons.
+   */
+  private final ButtonGroup my_tool_buttons;
+ 
+  /**
+   * A Button group to hold all file menu items.
+   */
+  private final ButtonGroup my_file_items;
+  
+  /**
+   * A Button group to hold all thickness buttons.
+   */
+  private final ButtonGroup my_thickness_buttons;
+  
+  /**
+   * Constructor. Creates new MenuBar for PowerPaint.
+   * 
+   */
+  public MenuBar(/*final JFrame the_frame*/) {
+    super();
+    my_help_menu = new JMenu("Help");
+    my_tool_buttons = new ButtonGroup();
+    my_file_items = new ButtonGroup();
+    my_thickness_buttons = new ButtonGroup();
+    addButtons();
+  }
+  
+  /**
+   * Adds buttons onto the menu bar.
+   */
+  private void addButtons() {
+    my_main_menus[0].setMnemonic(KeyEvent.VK_F);
+    my_main_menus[1].setMnemonic(KeyEvent.VK_O);
+    my_main_menus[2].setMnemonic(KeyEvent.VK_T);
+    my_help_menu.setMnemonic(KeyEvent.VK_H);
+    
+    for (JMenu m: my_main_menus) {
+      add(m);
+    }
+    
+    add(my_help_menu);
+  }
+  
+  /**
+   * Creates the file items (not including tools
+   * and thickness).
+   * 
+   * @param the_name The name.
+   */
+  public void createFileButtons(final String the_name  /*, Action the_a*/) {
+    final JMenuItem item = new JMenuItem(the_name);
+    item.setSelected(false);
+    my_file_items.add(item);
+    my_main_menus[0].add(item);
+  }
+  
+  /**
+   * Setups the option menu.
+   */
+  public void setupOptionButtons(/*final String the_name, Action the_a*/) {
+    final JCheckBox grid = new JCheckBox("Grid");
+    grid.setSelected(false);
+    my_main_menus[1].add(grid);
+    
+  }
+  
+  /**
+   * Creates radio buttons of a tool.
+   * 
+   * @param the_name The name.
+   */
+  public void createToolButtons(final String the_name /*, Action the_a*/) {
+    final JRadioButtonMenuItem tool = new JRadioButtonMenuItem(the_name);
+    tool.setSelected(false);
+    my_tool_buttons.add(tool);
+    my_main_menus[2].add(tool);
+  }
+  
+  /**
+   * Creates radio buttons for thickness.
+   * 
+   * @param the_name The name.
+   */
+  public void createThicknessButtons(final String the_name /*, Action the_a*/) {
+    final JRadioButtonMenuItem thickness = new JRadioButtonMenuItem(the_name);
+    thickness.setSelected(false);
+    my_thickness_buttons.add(thickness);
+  }
+  
+  /**
+   * Creates the help button.
+   * 
+   */
+  public void createHelpButton(/*final String the_message*/) {
+    //final JMenu help = new JMenu("Help");
+    final JMenuItem item = new JMenuItem("About");
+    item.setSelected(false);
+    my_help_menu.add(item);
+    
+    
+  }
+
+}

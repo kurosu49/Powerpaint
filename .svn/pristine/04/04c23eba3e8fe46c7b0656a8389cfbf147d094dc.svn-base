@@ -1,0 +1,46 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+
+/**
+ * The Rectangle tool for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.2
+ *
+ */
+public class RectangleTool extends AbstractTool {
+//
+//  private static final String NAME = "Rectangle";
+//  
+//  private static final int KEY = KeyEvent.VK_R;      
+
+  /**
+   * The Rectangle tool.
+   */
+  public RectangleTool() {
+//    super(NAME, KEY);
+    super();
+  }
+
+  public RectangleTool(final int the_start_x, final int the_start_y, final int the_end_x,
+                  final int the_end_y, final Color the_color) {
+    super(the_start_x, the_start_y, the_end_x, the_end_y, the_color);
+  }
+  
+  @Override
+  public void draw(Graphics the_graphic) {
+    the_graphic.setColor(getColor());
+    the_graphic.drawRect(getStartX(), getStartY(), getEndX(), getEndY());
+    // TODO Auto-generated method stub
+    
+  }
+  
+}

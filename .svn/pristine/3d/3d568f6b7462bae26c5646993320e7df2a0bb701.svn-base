@@ -1,0 +1,164 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+
+
+/**
+ * The GUI for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class PowerPaintGUI2 {
+  
+
+  /**
+   * Main frame of the GUI.
+   */
+  private final JFrame my_frame;
+  
+  /**
+   * Main panel of the GUI.
+   */
+  private final DrawingPanel my_panel;
+  
+  /**
+   * Contains the actions of all tool buttons.
+   */
+  private List<ToolButtonAction> my_tool_action;
+  
+  /**
+   * Constructs new PowerPaintGUI object.
+   * Initializes all instance fields.
+   */
+  public PowerPaintGUI2() {
+    my_frame = new JFrame("TCSS 305 PowerPaint, Spring 2013");
+    my_panel = new DrawingPanel();
+    //my_master_panel = new JPanel(new BorderLayout());
+  }
+  
+  /**
+   * 
+   */
+  public void createToolActions() {
+    my_tool_action = new ArrayList<ToolButtonAction>();
+    my_tool_action.add(new ToolButtonAction("Pencil", KeyEvent.VK_P, 0));
+    my_tool_action.add(new ToolButtonAction("Line", KeyEvent.VK_L, 1));
+    my_tool_action.add(new ToolButtonAction("Rectangle", KeyEvent.VK_R, 2));
+    my_tool_action.add(new ToolButtonAction("Ellipse", KeyEvent.VK_E, 3));
+  }
+
+  /**
+   * Creates and sets up the buttons and components
+   * by adding them onto the frame. 
+   */
+  private void initialSetup() {
+
+    my_frame.add(my_panel);
+    final PMenuBar menubar = new PMenuBar();
+    final PToolBar toolbar = new PToolBar();
+    menubar.createFileButtons();
+  
+    createToolActions();
+    
+//    final Object[] tools = new Object[]{new PencilTool(), new LineTool(), new RectangleTool(), 
+//                                        new EllipseTool()};
+    for (ToolButtonAction t : my_tool_action) {
+      menubar.createToolButtons(t.getName());
+      toolbar.createToolToggleButton(t.getName());
+    }
+    
+//    final LineTool test = new LineTool();
+//    menubar.testLineTool(test.getDescription(), test.getMnemonic(),
+//                              my_panel, 2);
+//    toolbar.createToolToggleButton(test.getDescription(), test.getMnemonic());
+    
+    menubar.createThicknessButtons("1", KeyEvent.VK_1);
+    menubar.createThicknessButtons("2", KeyEvent.VK_2);
+    menubar.createThicknessButtons("4", KeyEvent.VK_4);
+    menubar.setupOptionButtons();
+    menubar.createHelpButton();
+    
+    my_frame.setJMenuBar(menubar);
+    my_frame.add(toolbar, BorderLayout.SOUTH);
+    
+  }
+  
+  /**
+   * 
+   * @author Crystal
+   *
+   */
+  private class ToolButtonAction extends AbstractAction {
+
+	/**
+	 * The tool index.
+	 */
+    private int my_tool;
+    
+    private String my_name;
+	  
+      /**
+       * 
+       * @param the_name
+       * @param the_mnemonic
+       * @param the_index
+       */
+    public ToolButtonAction(final String the_name, final int the_mnemonic, 
+	                          final int the_index) {
+      super(the_name);
+      my_name = the_name;
+      my_tool = the_index;
+      this.putValue(Action.NAME, the_name);
+      this.putValue(Action.MNEMONIC_KEY, the_mnemonic);
+      this.putValue(Action.SELECTED_KEY, true);
+    }
+    
+    public String getName(){
+      return my_name;
+    }
+    
+	/**
+	 * Implements the action of the button.
+	 * 
+	 * @param the_action The action.
+	 */
+    @Override
+    public void actionPerformed(ActionEvent the_action) {
+    	my_panel.setTool(my_tool);
+      
+    }
+	  
+  }
+  
+  /**
+   * Basically creates the entire GUI.
+   */
+  public void start() {
+    
+    initialSetup();
+    
+    my_frame.pack();
+    my_frame.setVisible(true);
+    my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+  }
+  
+}

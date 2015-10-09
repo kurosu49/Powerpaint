@@ -1,0 +1,98 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JSeparator;
+import javax.swing.JToolBar;
+
+
+/**
+ * The GUI for PowerPaint.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class PowerPaintGUI {
+  
+
+  /**
+   * Main frame of the GUI.
+   */
+  private final JFrame my_frame;
+  
+  /**
+   * Main panel of the GUI.
+   */
+  private final DrawingPanel my_panel;
+  
+  /**
+   * Constructs new PowerPaintGUI object.
+   * Initializes all instance fields.
+   */
+  public PowerPaintGUI() {
+    my_frame = new JFrame("TCSS 305 PowerPaint, Spring 2013");
+    my_panel = new DrawingPanel();
+    //my_master_panel = new JPanel(new BorderLayout());
+  }
+  
+
+  /**
+   * Creates and sets up the buttons and components
+   * by adding them onto the frame. 
+   */
+  private void initialSetup() {
+
+    my_frame.add(my_panel);
+    final MenuBar menubar = new MenuBar();
+    final ToolBar toolbar = new ToolBar();
+    menubar.createFileButtons();
+  
+    final Object[] tools = new Object[]{new Pencil(), /*new LineTool(),*/ new Rectangle(), 
+                                        new Ellipse()};
+    for (Object t: tools) {
+      menubar.createToolButtons(((AbstractTool) t).getDescription(),
+                                ((AbstractTool) t).getMnemonic());
+      toolbar.createToolToggleButton(((AbstractTool) t).getDescription(), 
+                                     ((AbstractTool) t).getMnemonic());
+    }
+    
+    final LineTool test = new LineTool();
+    menubar.testLineTool(test.getDescription(), test.getMnemonic(),
+                              my_panel, 2);
+    toolbar.createToolToggleButton(test.getDescription(), test.getMnemonic());
+    
+    menubar.createThicknessButtons("1", KeyEvent.VK_1);
+    menubar.createThicknessButtons("2", KeyEvent.VK_2);
+    menubar.createThicknessButtons("4", KeyEvent.VK_4);
+    menubar.setupOptionButtons();
+    menubar.createHelpButton();
+    
+    my_frame.setJMenuBar(menubar);
+    my_frame.add(toolbar, BorderLayout.SOUTH);
+    
+  }
+  
+  
+  /**
+   * Basically creates the entire GUI.
+   */
+  public void start() {
+    
+    initialSetup();
+    
+    my_frame.pack();
+    my_frame.setVisible(true);
+    my_frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    
+  }
+  
+}

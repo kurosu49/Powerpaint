@@ -1,0 +1,229 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
+
+
+
+
+//import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
+
+    
+
+
+
+/**
+ * Menu Bar class.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class PMenuBar extends JMenuBar {
+  
+  /**
+   * Default thickness to be set.
+   */
+  private static final String MY_DEFAULT_THICKNESS = "1";
+  
+  /**
+   * The main menus for PowerPaint.
+   */
+  private final JMenu[] my_main_menus = new JMenu[] {new JMenu("File") , new JMenu("Options"), 
+                                                     new JMenu("Tools")};
+  /**
+   * The help menu.
+   */
+  private final JMenu my_help_menu;
+  
+  /**
+   * The thickness menu.
+   */
+  private final JMenu my_thickness_menu;
+  
+  /**
+   * A Button group to hold all tool buttons.
+   */
+  private final ButtonGroup my_tool_buttons;
+ 
+  /**
+   * A Button group to hold all file menu items.
+   */
+  private final ButtonGroup my_file_items;
+  
+  /**
+   * A Button group to hold all thickness buttons.
+   */
+  private final ButtonGroup my_thickness_buttons;
+  
+  /**
+   * Default tool to be set.
+   */
+//  private final String my_default_tool = "Pencil";
+
+  
+//  /**
+//   * 
+//   */
+//  private JMenuItem my_color_button;
+  
+  /**
+   * Constructor. Creates new MenuBar for PowerPaint.
+   * 
+   */
+  public PMenuBar() {
+    super();
+    my_help_menu = new JMenu("Help");
+    my_tool_buttons = new ButtonGroup();
+    my_thickness_menu = new JMenu("Thickness");
+    my_file_items = new ButtonGroup();
+    my_thickness_buttons = new ButtonGroup();
+    addButtons();
+  }
+  
+  /**
+   * Adds buttons onto the menu bar.
+   */
+  private void addButtons() {
+    my_main_menus[0].setMnemonic(KeyEvent.VK_F);
+    my_main_menus[1].setMnemonic(KeyEvent.VK_O);
+    my_main_menus[2].setMnemonic(KeyEvent.VK_T);
+    my_help_menu.setMnemonic(KeyEvent.VK_H);
+    my_thickness_menu.setMnemonic(KeyEvent.VK_T);
+    for (JMenu m: my_main_menus) {
+      add(m);
+    }
+    
+    add(my_help_menu);
+  }
+  
+  /**
+   * Creates the file items (not including tools
+   * and thickness).
+   * 
+   */
+  public void createFileButtons() {
+    final JMenuItem item = new JMenuItem("Clear");
+    item.setMnemonic(KeyEvent.VK_C);
+    item.setSelected(false);
+    my_file_items.add(item);
+    my_main_menus[0].add(item);
+    my_main_menus[0].addSeparator();
+    final JMenuItem item2 = new JMenuItem("Exit");
+    item2.setMnemonic(KeyEvent.VK_X);
+    item2.setSelected(false);
+    my_file_items.add(item);
+    my_main_menus[0].add(item2);
+
+  }
+  
+  /**
+   * Setups the option menu.
+   */
+  public void setupOptionButtons() {
+    final JCheckBox grid = new JCheckBox("Grid");
+    grid.setMnemonic(KeyEvent.VK_G);
+    grid.setSelected(false);
+    my_main_menus[1].add(grid);
+    my_main_menus[1].add(my_thickness_menu);
+    
+  }
+  
+  /**
+   * Creates radio buttons of a tool.
+   * 
+   * @param the_action The action of the button
+   * being made.
+   */
+  public void createToolButtons(final Action the_action) {
+    final JRadioButtonMenuItem tool = new JRadioButtonMenuItem(the_action);
+//    if (tool.getName().equals(my_default_tool)) {
+//      tool.setSelected(true);
+//    } else {
+    tool.setSelected(false);
+//    }
+    my_tool_buttons.add(tool);
+    my_main_menus[2].add(tool);
+  }
+  
+  /**
+   * Creates radio buttons for thickness.
+   * 
+   * @param the_name The name.
+   * @param the_mnemonic The mnemonic.
+   */
+  public void createThicknessButtons(final String the_name, final int the_mnemonic
+                                     /*, Action the_a*/) {
+    final JRadioButtonMenuItem thickness = new JRadioButtonMenuItem(the_name);
+    thickness.setMnemonic(the_mnemonic);
+    if (the_name.equals(MY_DEFAULT_THICKNESS)) {
+      thickness.setSelected(true);
+    } else {
+      thickness.setSelected(false);
+    }
+    my_thickness_buttons.add(thickness);
+    my_thickness_menu.add(thickness);
+  }
+  
+  /**
+   * Creates the help button.
+   * 
+   */
+  public void createHelpButton() {
+    final JMenuItem item = new JMenuItem("About");
+    item.setMnemonic(KeyEvent.VK_A);
+    item.setSelected(false);
+    item.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(final ActionEvent the_action) {
+        JOptionPane.showMessageDialog(item, "Insert interesting message here.");
+      }
+      
+    });
+    my_help_menu.add(item);
+    
+    
+  }
+
+  /**
+   * Creates the color button.
+   * 
+   * @param the_action The action.
+   */
+  public void createColorButton(final Action the_action) {
+    final JMenuItem color_button = new JMenuItem(the_action);
+    color_button.setSelected(false);
+    color_button.setBackground(Color.BLACK);
+    color_button.setForeground(Color.WHITE);
+    my_main_menus[2].add(color_button);
+    my_main_menus[2].addSeparator();
+
+  }
+  
+//  public void changeColorButton(Color the_color) {
+//    my_color_button.setBackground(the_color);
+//    if (the_color == Color.BLACK) {
+//      my_color_button.setForeground(Color.WHITE);
+//    } else {
+//      my_color_button.setForeground(Color.BLACK);
+//    }
+//  }
+
+  
+}

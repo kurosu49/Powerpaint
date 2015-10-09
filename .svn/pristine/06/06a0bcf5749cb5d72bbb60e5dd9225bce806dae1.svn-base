@@ -1,0 +1,258 @@
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ *
+ */
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+
+/**
+ * The Abstract class for all PowerPaint tools.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public abstract class AbstractTool {
+//  
+//  /**
+//   * The drawing path the tool is on.
+//   */
+//  protected GeneralPath my_path = new GeneralPath();
+  
+  /**
+   * The color.
+   */
+  private Color my_color;
+  
+  /**
+   * Width of the shape.
+   */
+  private double my_width;
+  
+  /**
+   * Height of the shape.
+   */
+  private double my_height;
+  
+  /**
+   * The thickness of the path being drawn.
+   */
+  private int my_thickness = 1;
+  
+  /**
+   * Starting x-coordinate the tool started
+   * drawing at.
+   */
+  private int my_start_x;
+  
+  /**
+   * Starting y-coordinate the tool started
+   * drawing at.
+   */
+  private int my_start_y;
+  
+  /**
+   * Ending x-coordinate the tool finished 
+   * drawing at.
+   */
+  private int my_end_x;
+  
+  /**
+   * Ending y-coordinate the tool finished
+   * drawing at.
+   */
+  private int my_end_y;
+  
+  /**
+   * Default constructor of a tool.
+   */
+  public AbstractTool() {
+    this(0, 0, 0, 0, Color.BLACK);
+  }
+  
+  /**
+   * Creates a new tool to start drawing at these points.
+   * 
+   * @param the_start_x starting x-coordinate.
+   * @param the_start_y starting y-coordinate.
+   * @param the_end_x ending x-coordinate.
+   * @param the_end_y ending y-coordinate.
+   * @param the_color the color.
+   */
+  public AbstractTool(final int the_start_x, final int the_start_y, final int the_end_x, 
+                       final int the_end_y, final Color the_color) {
+    my_width = 0;
+    my_height = 0;
+    my_start_x = the_start_x;
+    my_start_y = the_start_y;
+    my_end_x = the_end_x;
+    my_end_y = the_end_y;
+    my_color = the_color;
+  }
+  
+  /**
+   * Calculates the width and height of a shape.
+   */
+  public void calculate() {
+    my_width = Math.abs(getEndX() - getStartX());
+    my_height = Math.abs(getEndY() - getStartY());
+    
+  }  
+  
+  /**
+   * Sets the current color of the tool.
+   * 
+   * @param the_color The Color.
+   */
+  public void setColor(final Color the_color) {
+    my_color = the_color;
+  }
+  
+  /**
+   * Sets the thickness of the tool.
+   * @param the_thickness The thickness.
+   */
+  public void setThickness(final int the_thickness) {
+    my_thickness = the_thickness;
+  }
+  
+  /**
+   * Sets the starting x-coordinate to the 
+   * passed in coordinate.
+   * 
+   * @param the_start_x The new starting x-coordinate.
+   */
+  public void setStartX(final int the_start_x) {
+    my_start_x = the_start_x;
+  }
+  
+  /**
+   * Sets the starting y-coordinate to the
+   * passed in coordinate.
+   * 
+   * @param the_start_y The new starting y-coordinate.
+   */
+  public void setStartY(final int the_start_y) {
+    my_start_y = the_start_y;
+  }
+
+  /**
+   * Sets both ending x-coordinate and y-coordinate.
+   * 
+   * @param the_end_x The new ending x-coordinate.
+   * @param the_end_y The new ending y-coordinate.
+   * 
+   */
+  public void setEndPoints(final int the_end_x, final int the_end_y) {
+    my_end_x = the_end_x;
+    my_end_y = the_end_y;
+  }
+  
+  /**
+   * Obtains the width of the shape.
+   * 
+   * @return the width.
+   */
+  public double getWidth() {
+    return my_width; 
+  }
+  
+  /**
+   * Obtains the height of the shape.
+   * 
+   * @return the height .
+   */
+  public double getHeight() {
+    return my_height;
+  }
+  
+  /**
+   * Obtains the color this tool is 
+   * drawing with.
+   * 
+   * @return the color the tool is using.
+   */
+  public Color getColor() {
+    return my_color;
+  }
+  
+  /**
+   * Obtains the stroke width/thickness this
+   * tool is using. 
+   * 
+   * @return the thickness the tool is using.
+   */
+  public int getThickness() {
+    return my_thickness;
+  }
+  
+  /**
+   * Obtains starting x-coordinate.
+   * 
+   * @return starting x-coordinate.
+   */
+  public int getStartX() {
+    return my_start_x;
+  }
+  
+  /**
+   * Obtains starting y-coordinate.
+   * 
+   * @return starting y-coordinate.
+   */
+  public int getStartY() {
+    return my_start_y;
+  }
+  
+  /**
+   * Obtains ending x-coordinate.
+   * 
+   * @return ending x-coordinate.
+   */
+  public int getEndX() {
+    return my_end_x;
+  }
+  
+  /**
+   * Obtains ending y-coordinate.
+   * 
+   * @return ending y-coordinate.
+   */
+  public int getEndY() {
+    return my_end_y;
+  }
+  
+  /**
+   * Obtains the new starting x-coordinate
+   * if a shape is flipped over.
+   * 
+   * @return new starting x point.
+   */
+  public int getRotatedX() {
+    return Math.min(my_end_x, my_start_x);
+  }
+  
+  /**
+   * Obtains the new starting y-coordinate
+   * if a shape is flipped over.
+   * 
+   * @return new starting y-point.
+   */
+  public int getRotatedY() {
+    return Math.min(my_end_y, my_start_y);
+  }
+  
+  /**
+   * The drawing method of the tool.
+   * 
+   * @param the_graphic The graphic.
+   */
+  public abstract void draw(Graphics the_graphic);
+
+
+  
+  
+}

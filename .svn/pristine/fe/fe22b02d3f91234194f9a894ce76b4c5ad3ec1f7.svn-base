@@ -1,0 +1,33 @@
+import javax.swing.JPanel;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+/**
+ * A Drawing Panel object.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+public class DrawingPanel extends JPanel {
+
+  private static final int PREFERRED_WIDTH = 400;
+  
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  public DrawingPanel() {
+    super();
+    setInitialSize(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  }
+  
+  private void setInitialSize(final int the_width, final int the_height) {
+    this.setSize(the_width, the_height);
+  }
+  
+  
+  
+}

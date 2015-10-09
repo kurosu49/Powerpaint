@@ -1,0 +1,185 @@
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.GeneralPath;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+import javax.swing.JPanel;
+
+/*
+ * TCSS305 - Spring 2013
+ * Assignment 5 - PowerPaint
+ * 
+ */
+
+/**
+ * A Drawing Panel object.
+ * 
+ * @author Crystal Miraflor
+ * @version 1.00
+ *
+ */
+@SuppressWarnings("serial")
+public class DrawingPanel extends JPanel {
+
+  /**
+   * Preferred width of the drawing panel.
+   */
+  private static final int PREFERRED_WIDTH = 400;
+  
+  /**
+   * Preferred height of the drawing panel.
+   */
+  private static final int PREFERRED_HEIGHT = 300;
+  
+  /**
+   * Preferred size.
+   */
+  private static final Dimension SIZE = new Dimension(PREFERRED_WIDTH, PREFERRED_HEIGHT);
+  
+  /**
+   * The drawings/paths on the drawing panel.
+   */
+  private List<AbstractTool> my_drawings;
+  
+//  /**
+//   * Array of tools.
+//   */
+//  private final Object[] my_tools = {new PencilTool(), new LineTool(), 
+//                                     new RectangleTool(), new EllipseTool()};
+  
+  /**
+   * The color on the panel.
+   */
+  private final Color my_color;
+  
+  /**
+   * The index of the tool in use.
+   */
+  private int my_tool_index;
+  
+  /**
+   * The current tool that is drawing.
+   */
+  private Object my_curr_tool;
+  
+  
+  /**
+   * Constructs a new Drawing panel.
+   */
+  public DrawingPanel() {
+    super();
+    this.setPreferredSize(SIZE);
+    this.setBackground(Color.WHITE);
+    my_drawings = new ArrayList<AbstractTool>();
+    my_color = Color.BLACK;
+    my_curr_tool = null;
+    //test
+    my_tool_index = 1;
+    addMouseListener(new MouseHandler());
+    addMouseMotionListener(new MouseHandler());
+  }
+
+  /**
+   * Sets the tool index to the current tool.
+   * 
+   * @param the_index The index.
+   */
+  public void setTool(final int the_index) {
+	  my_tool_index = the_index;
+  }
+  
+  /**
+   * 
+   * @param the_graphics The graphics.
+   */
+  @Override
+  public void paintComponent(final Graphics the_graphics) {
+    super.paintComponent(the_graphics);
+    final Graphics2D graphic = (Graphics2D) the_graphics;
+    for (int i = 0; i < my_drawings.size(); i++) {
+    	my_drawings.get(i).draw(graphic);
+    }
+    if (my_curr_tool != null) {
+    	((AbstractTool) my_curr_tool).draw(graphic);
+    }
+//    graphic.setColor(my_color);
+//    graphic.setStroke(new BasicStroke(1));
+//    for (GeneralPath d : my_drawings) {
+//      ((AbstractTool) my_tool).setPanel(this);
+//      graphic.draw(d);
+      
+    }
+  
+  /**
+   * 
+   * The mouse listener for the drawing panel.
+   * 
+   * @author Crystal Miraflor
+   * @version 1.2
+   */
+  private class MouseHandler extends MouseAdapter implements MouseMotionListener {
+	  
+	  /**
+	   * Listens for mouse presses and starts the drawing
+	   * there.
+	   * 
+	   * @param the_event The event.
+	   */
+    public void mousePressed(final MouseEvent the_event) {
+      switch(my_tool_index) {
+		  
+        case 1:
+          my_curr_tool = new LineTool(the_event.getX(), the_event.getY(),
+                                      the_event.getX(), the_event.getY(), my_color);
+          break;
+//        default:
+//		  my_curr_tool = new LineTool(the_event.getX(), the_event.getY(),
+//		                              the_event.getX(), the_event.getY(), my_color);
+//		
+      }
+    }
+	  
+	  /**
+	   * Listens for if the mouse is dragged and continues the drawing.
+	   * 
+	   * @param the_event The event.
+	   */
+    public void mouseDragged(final MouseEvent the_event) {
+      if(my_curr_tool != null) {
+    	((AbstractTool) my_curr_tool).setEndPoints(the_event.getX(), the_event.getY());
+      
+    	repaint();
+      }
+    }
+	  
+	  /**
+	   * Listens if the mouse is released and ends the drawing there.
+	   * 
+	   * @param the_event The event.
+	   */
+    public void mouseReleased(final MouseEvent the_event) {
+      if(my_curr_tool != null) {
+    	((AbstractTool) my_curr_tool).setEndPoints(the_event.getX(), the_event.getY());
+        my_drawings.add((AbstractTool) my_curr_tool);
+        my_curr_tool = null;
+        repaint();
+      }
+    }
+
+ 
+  
+	  
+  }
+
+  
+  
+}
